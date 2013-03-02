@@ -1,0 +1,56 @@
+<project default="jar" name="ant demo" xmlns:ivy="antlib:org.apache.ivy.ant">
+  <target name="clean">
+    <delete dir="target" />
+    <delete dir="distrib" />
+    <delete dir="lib" />
+  </target>
+
+  <target name="compile">
+    <ivy:retrieve />
+    <mkdir dir="target/classes" />
+    <javac srcdir="src/main" destdir="target/classes" />
+  </target>
+
+    <target name="jar" depends="test">
+        <mkdir dir="target/jar" />
+        <jar destfile="target/jar/testant.jar" basedir="target/classes">
+            <manifest>
+                <attribute name="Main-Class" value="org.headsupdev.demo.ant.Test" />
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="target/jar/testant.jar" fork="true" />
+    </target>
+
+  <target name="deploy" depends="jar">
+    <ivy:resolve />
+    <ivy:publish resolver="local" forcedeliver="true" overwrite="true">
+      <artifacts pattern="target/jar/[artifact].[ext]" />
+    </ivy:publish>
+  </target>
+
+  <target name="testcompile" depends="compile">
+    <mkdir dir="target/test-classes" />
+    <javac srcdir="src/test" destdir="target/test-classes">
+      <classpath path="target/classes;junit.jar" />
+    </javac>
+  </target>
+
+
+  <property name="report.dir"  value="target/surefire-reports" />
+  <target name="test" depends="testcompile">
+    <mkdir dir="${report.dir}" />
+
+    <junit printsummary="true">
+      <classpath path="target/classes;target/test-classes;junit.jar" />
+
+      <formatter type="brief" usefile="true" />
+      <formatter type="xml" />
+      <batchtest fork="yes" todir="${report.dir}">
+        <fileset dir="src/test" />
+      </batchtest>
+    </junit>
+  </target>
+</project>

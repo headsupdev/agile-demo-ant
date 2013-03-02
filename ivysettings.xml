@@ -1,0 +1,17 @@
+<ivysettings>
+  <properties file="${ivy.settings.dir}/ivysettings-file.properties" />
+  <settings defaultResolver="libraries" />
+  <credentials host="localhost" realm="HeadsUp Webdav" username="admin" passwd="admin" />
+
+  <resolvers>
+    <chain name="libraries">
+      <url name="headsup" m2compatible="true">
+        <artifact pattern="http://headsupdev.org/repository/external/[organization]/[module]/[revision]/[artifact]-[revision].[ext]" />
+      </url>
+      <url name="local" m2compatible="true">
+        <artifact pattern="http://localhost:8069/repository/snapshot/[organization]/[module]/[revision]/[artifact]-[revision].[ext]" />
+      </url>
+      <ibiblio name="ibiblio" />
+    </chain>
+  </resolvers>
+</ivysettings>
